@@ -1,45 +1,32 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Create from './components/create';
-import Read from './components/read';
-import Update from './components/update';
-import './App.css';
+import React, { useState } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import AddTask from "./components/AddTask";
+import EditTask from "./components/EditTask";
+import DeleteTask from "./components/DeleteTask";
+import './App.css'; // Make sure to import the CSS file
 
 function App() {
-    const [data, setData] = useState([
-        { id: 1, firstName: 'John', lastName: 'Doe' },
-        { id: 2, firstName: 'Jane', lastName: 'Doe' }
-    ]);
+  const [tasks, setTasks] = useState([]);
 
-    const addRecord = (newRecord) => {
-        const newId = data.length ? data[data.length - 1].id + 1 : 1;
-        setData([...data, { id: newId, ...newRecord }]);
-    };
+  return (
+    <div className="App">
+      <h1>React CRUD To-Do List</h1>
 
-    const updateRecord = (updatedRecord) => {
-        const updatedData = data.map(item => 
-            item.id === updatedRecord.id ? updatedRecord : item
-        );
-        setData(updatedData);
-    };
+      {/* Navigation Buttons */}
+      <div className="nav-buttons">
+        <Link to="/add" className="nav-button">Add Task</Link>
+        <Link to="/edit" className="nav-button">Edit Task</Link>
+        <Link to="/delete" className="nav-button">Delete Task</Link>
+      </div>
 
-    const handleDelete = (id) => {
-        const updatedData = data.filter(item => item.id !== id);
-        setData(updatedData);
-    };
-
-    return (
-        <Router>
-            <div className="main">
-                <h2 className="main-header">React CRUD Operations</h2>
-                <Routes>
-                    <Route path="/" element={<Create addRecord={addRecord} />} />
-                    <Route path="/read" element={<Read data={data} handleDelete={handleDelete} />} />
-                    <Route path="/update/:id" element={<Update data={data} updateRecord={updateRecord} />} />
-                </Routes>
-            </div>
-        </Router>
-    );
+      {/* Routing for different components */}
+      <Routes>
+        <Route path="/add" element={<AddTask tasks={tasks} setTasks={setTasks} />} />
+        <Route path="/edit" element={<EditTask tasks={tasks} setTasks={setTasks} />} />
+        <Route path="/delete" element={<DeleteTask tasks={tasks} setTasks={setTasks} />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;
