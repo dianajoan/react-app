@@ -1,31 +1,31 @@
 import React, { useState } from "react";
 
-function AddTask({ tasks, setTasks }) {
-  const [newTask, setNewTask] = useState("");
+const AddTask = ({ tasks, setTasks }) => {
+  const [task, setTask] = useState("");
 
-  const addTask = () => {
-    if (newTask.trim()) {
-      const task = {
-        id: Date.now(),
-        text: newTask,
-      };
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (task) {
       setTasks([...tasks, task]);
-      setNewTask(""); // Clear input after adding task
+      setTask("");
     }
   };
 
   return (
     <div>
       <h2>Add Task</h2>
-      <input
-        type="text"
-        placeholder="Enter new task"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-      />
-      <button onClick={addTask}>Add Task</button>
+      <form onSubmit={handleAddTask}>
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Enter task"
+          required
+        />
+        <button type="submit">Add Task</button>
+      </form>
     </div>
   );
-}
+};
 
 export default AddTask;

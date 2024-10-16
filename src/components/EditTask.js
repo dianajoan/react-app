@@ -1,55 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function EditTask({ tasks, setTasks }) {
-  const [editTaskId, setEditTaskId] = useState(null);
-  const [editTask, setEditTask] = useState("");
+const EditTask = ({ tasks, setTasks, taskToEdit }) => {
+  const [task, setTask] = useState("");
 
-  const selectTaskToEdit = (taskId, taskText) => {
-    setEditTaskId(taskId);
-    setEditTask(taskText);
-  };
+  useEffect(() => {
+    if (taskToEdit !== null) {
+      setTask(tasks[taskToEdit]);
+    }
+  }, [taskToEdit, tasks]);
 
-  const updateTask = () => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === editTaskId ? { ...task, text: editTask } : task
-    );
-    setTasks(updatedTasks);
-    setEditTaskId(null);
-    setEditTask("");
+  const handleEditTask = (e) => {
+    e.preventDefault();
+    if (taskToEdit !== null) {
+      const updatedTasks = [...tasks];
+      updatedTasks[taskToEdit] = task;
+      setTasks(updatedTasks);
+    }
+    setTask("");
   };
 
   return (
     <div>
       <h2>Edit Task</h2>
-      <div>
-        {tasks.length === 0 ? (
-          <p>No tasks available</p>
-        ) : (
-          tasks.map((task) => (
-            <div key={task.id}>
-              {editTaskId === task.id ? (
-                <>
-                  <input
-                    type="text"
-                    value={editTask}
-                    onChange={(e) => setEditTask(e.target.value)}
-                  />
-                  <button onClick={updateTask}>Update</button>
-                </>
-              ) : (
-                <>
-                  <span>{task.text}</span>
-                  <button onClick={() => selectTaskToEdit(task.id, task.text)}>
-                    Edit
-                  </button>
-                </>
-              )}
-            </div>
-          ))
-        )}
-      </div>
+      <form onSubmit={handleEditTask}>
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Edit task"
+          required
+        />
+        <button type="submit">Update Task</button>
+      </form>
     </div>
   );
-}
+};
 
 export default EditTask;
